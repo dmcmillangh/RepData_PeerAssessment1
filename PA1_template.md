@@ -1,8 +1,9 @@
 # Reproducible Research: Peer Assessment 1
+D McMillan  
 
 
 ## Loading and preprocessing the data
-The librarires required are specified below, and the data were read into an R data.table use this code:
+The libraries required are specified below, and the data were read into an R data.table use this code:
 
 ```r
 library(lattice)
@@ -34,7 +35,7 @@ title("(1 October-30 November 2012)",line=1,cex.main=.9)
 title(ylab="Frequency of Days",xlab="Steps/day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](PA1_files/figure-html/unnamed-chunk-3-1.png) 
 
 Also, the mean, and median are as follows:
 
@@ -73,7 +74,7 @@ axis(side=1,at=c(0:24)*100,labels=c(0:24)*100,las=2)
 axis(side=1,at=c(0:240)*10+1/12,labels=FALSE,tck=.01)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_files/figure-html/unnamed-chunk-5-1.png) 
 
 It appears than the largest contributing times are between 8 and 9 am.
 The largest single 5-minute interval begins at 8:35 am.
@@ -110,7 +111,7 @@ title("(1 October-30 November 2012)",line=1,cex.main=.9)
 title(ylab="Frequency of Days",xlab="Steps/day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+![](PA1_files/figure-html/unnamed-chunk-8-1.png) 
 
 ```r
 mean(day_steps$tot_steps,na.rm=TRUE)
@@ -136,32 +137,28 @@ Finally, we take advantage of the weekend factor variable to show average activi
 ```r
 intw_steps<- ac0 %>% group_by(wkend.f,interval)  %>% summarize(avg_steps=mean(steps,na.rm=TRUE))
 intw_steps<-arrange(intw_steps,intw_steps$wkend.f)
-#intw_steps$mean[intw_steps$wkend.f=="Weekend"]<-mean(intw_steps$avg_steps[intw_steps$wkend.f=="Weekend"])
-#intw_steps$mean[intw_steps$wkend.f=="Weekday"]<-mean(intw_steps$avg_steps[intw_steps$wkend.f=="Weekday"])
-
 xm1<-round(mean(intw_steps$avg_steps[intw_steps$wkend.f=="Weekday"]),1)
 xm2<-round(mean(intw_steps$avg_steps[intw_steps$wkend.f=="Weekend"]),1)
 wdlabs=c(paste0("Weekend (mean=",xm2,")"),paste0("Weekday (mean=",xm1,")"))
 
-#par(xaxp=c(0,2400,25))
 xyplot(intw_steps$avg_steps~intw_steps$interval|intw_steps$wkend.f, 
        main="Average Steps per Interval",
        layout=c(1,2),
        ann=FALSE,
        strip=strip.custom(factor.levels=wdlabs),
-       scales=list(y=list(at=c(0:25)*10), x=list(at=c(0:24)*100)),
+       scales=list(y=list(at=c(0:12)*25), x=list(at=c(0:24)*100,rot=90)),
        panel=function(x, y,...){
          panel.xyplot(x,y,...) 
-#         panel.text(20,"Mean")
          panel.abline(h=mean(y),lwd=2,col='red') },
        ylab="Frequency (Days)", xlab="Steps/Day",type="l",lwd=2)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](PA1_files/figure-html/unnamed-chunk-9-1.png) 
 
 A few observations should be made.
-1) Somewhat surprising is that fact that weekend activity surpasses weekday activity, on average.
-2) Mornings in both cases get the most steps, and weekend or not, this happens between 8- and 9 am.
-3) In accord with expectations of the "sleeping in" weekend opportunities, activity in the 5-8 am period is much reduced on the weekend.
-4) Finally, overall activity on weekends seems more spread out across the daytime hours than it is on weekdays, when activity is high in the morning, and drops off a fair amount after 9am.
+
+1. Somewhat surprising is that fact that weekend activity surpasses weekday activity, on average.
+2. Mornings in both cases get the most steps, and weekend or not, this happens between 8- and 9 am.
+3. In accord with expectations of the "sleeping in" weekend opportunities, activity in the 5-8 am period is much reduced on the weekend.
+4. Finally, overall activity on weekends seems more spread out across the daytime hours than it is on weekdays, when activity is high in the morning, and drops off a fair amount after 9am.
 
